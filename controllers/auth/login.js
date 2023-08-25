@@ -30,6 +30,10 @@ const login = async (req, res) => {
     user: {
       name: user.name,
       email: user.email,
+      birthday: user.birthday,
+      phone: user.phone,
+      skype: user.skype,
+      avatarURL: user.avatarURL,
     },
     token,
   });
