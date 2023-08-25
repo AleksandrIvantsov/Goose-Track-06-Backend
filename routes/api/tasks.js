@@ -7,7 +7,7 @@ const {
   getTaskById,
   deleteTask,
   postTask,
-  putTask,
+  patchTask,
 } = require("../../controllers");
 
 const { schemas } = require("../../models/task");
