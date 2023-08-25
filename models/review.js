@@ -6,11 +6,11 @@ const ratings = ["1", "2", "3", "4", "5"];
 // Валідатор даних на сервері
 const reviewSchema = new Schema(
   {
-    review: {
+    comment: {
       type: String,
       minlength: 3,
       maxlength: 300,
-      required: [true, "Please, type text of review"],
+      required: [true, "Please, type comment of review"],
     },
 
     rating: {
@@ -38,14 +38,14 @@ const Review = model("review", reviewSchema);
 
 // Валідатори отриманих з клієнта даних
 const reviewValidator = Joi.object({
-  review: Joi.string().min(3).max(300).required(),
+  comment: Joi.string().min(3).max(300).required(),
   rating: Joi.string()
     .valid(...ratings)
     .required(),
 });
 
 const reviewUpdateValidator = Joi.object({
-  review: Joi.string().min(3).max(300),
+  comment: Joi.string().min(3).max(300),
   rating: Joi.string().valid(...ratings),
 });
 

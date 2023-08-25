@@ -11,7 +11,7 @@ const {
 } = require("../../controllers/reviews");
 
 const { schemas } = require("../../models/review");
-const { authenticate, isValidId, validateBody } = require("../../middlewares");
+const { authenticate, validateBody } = require("../../middlewares");
 
 router.get("/", getReviews);
 
@@ -24,11 +24,10 @@ router.post(
   postReview
 );
 
-router.delete("/own", isValidId, authenticate, deleteReview);
+router.delete("/own", authenticate, deleteReview);
 
 router.patch(
   "/own",
-  isValidId,
   validateBody(schemas.reviewUpdateValidator, "mistakes in fields"),
   authenticate,
   patchReview
