@@ -16,6 +16,10 @@
     {
       "name": "Users",
       "description": "Registration and authorization endpoints"
+    },
+    {
+      "name": "Tasks",
+      "description": "Todos endpoints"
     }
   ],
   "paths": {
@@ -172,6 +176,168 @@
           }
         }
       }
+    },
+    "/api/tasks": {
+      "post": {
+        "tags": ["Tasks"],
+        "summary": "Create new task",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Task's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskCreationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskSerializer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tasks/{id}": {
+      "patch": {
+        "tags": ["Tasks"],
+        "summary": "Update task",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Task's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskUpdatingRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskSerializer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Tasks"],
+        "summary": "Delete task",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "204": {
+            "description": "Task deleted successfully",
+            "content": {}
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -213,6 +379,81 @@
           }
         }
       },
+      "TaskCreationRequest": {
+        "type": "object",
+        "required": ["title", "date", "start", "end", "priority", "category"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Task's title",
+            "example": "Task1"
+          },
+          "date": {
+            "type": "string",
+            "description": "Task's date",
+            "example": "2023-08-25"
+          },
+          "start": {
+            "type": "string",
+            "description": "Task's start time",
+            "example": "09:00"
+          },
+          "end": {
+            "type": "string",
+            "description": "Task's end time",
+            "example": "15:00"
+          },
+          "priority": {
+            "type": "string",
+            "description": "Task's priority",
+            "example": "low",
+            "enum": ["low", "medium", "high"]
+          },
+          "category": {
+            "type": "string",
+            "description": "Task's category",
+            "example": "to-do",
+            "enum": ["to-do", "in-progress", "done"]
+          }
+        }
+      },
+      "TaskUpdatingRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Task's title",
+            "example": "Task1"
+          },
+          "date": {
+            "type": "string",
+            "description": "Task's date",
+            "example": "2023-08-25"
+          },
+          "start": {
+            "type": "string",
+            "description": "Task's start time",
+            "example": "09:00"
+          },
+          "end": {
+            "type": "string",
+            "description": "Task's end time",
+            "example": "15:00"
+          },
+          "priority": {
+            "type": "string",
+            "description": "Task's priority",
+            "example": "low",
+            "enum": ["low", "medium", "high"]
+          },
+          "category": {
+            "type": "string",
+            "description": "Task's category",
+            "example": "to-do",
+            "enum": ["to-do", "in-progress", "done"]
+          }
+        }
+      },
       "UserSerializer": {
         "type": "object",
         "properties": {
@@ -229,12 +470,12 @@
           "birthday": {
             "type": "string",
             "description": "User's birthday",
-            "example": "25/08/1995"
+            "example": "1995-08-25"
           },
           "phone": {
             "type": "string",
             "description": "User's phone",
-            "example": "38 (097) 256 34 77"
+            "example": "+380972563477"
           },
           "skype": {
             "type": "string",
@@ -258,6 +499,53 @@
             "type": "string",
             "description": "User's token",
             "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTdkNTFkYmYwYjI4YjMxNDlmZDE3MSIsImlhdCI6MTY5MjkxNDk3MywiZXhwIjoxNjkyOTk3NzczfQ.fdcVeFCCLsJyUInY2LaQFsleeEXOIYsGZQpFzfUFuJo"
+          }
+        }
+      },
+      "TaskSerializer": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Task's id",
+            "example": "64e90804a67180aafb894854"
+          },
+          "title": {
+            "type": "string",
+            "description": "Task's title",
+            "example": "Task1"
+          },
+          "date": {
+            "type": "string",
+            "description": "Task's date",
+            "example": "2023-08-25"
+          },
+          "start": {
+            "type": "string",
+            "description": "Task's start time",
+            "example": "09:00"
+          },
+          "end": {
+            "type": "string",
+            "description": "Task's end time",
+            "example": "15:00"
+          },
+          "priority": {
+            "type": "string",
+            "description": "Task's priority",
+            "example": "low",
+            "enum": ["low", "medium", "high"]
+          },
+          "category": {
+            "type": "string",
+            "description": "Task's category",
+            "example": "to-do",
+            "enum": ["to-do", "in-progress", "done"]
+          },
+          "owner": {
+            "type": "string",
+            "description": "Task's owner",
+            "example": "64e88095ca6abac87e9fa9af"
           }
         }
       },

@@ -4,6 +4,8 @@ const Joi = require("joi");
 const handleMongooseError = require("../utils/handleMongooseError");
 
 const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+const birthdayRegexp = /^\d{4}-\d{2}-\d{2}$/;
+const phoneRegexp = /^\+380\d{2}\d{3}\d{2}\d{2}$/;
 
 const userSchema = new Schema(
   {
@@ -30,14 +32,18 @@ const userSchema = new Schema(
     },
     birthday: {
       type: String,
+      match: birthdayRegexp,
       default: null,
     },
     phone: {
       type: String,
+      match: phoneRegexp,
       default: null,
     },
     skype: {
       type: String,
+      minlength: 2,
+      maxlength: 16,
       default: null,
     },
     avatarURL: {
