@@ -1,11 +1,11 @@
-const { register } = require("./register");
-const { login } = require("./login");
-const { getCurrent } = require("./getCurrent");
-const { logout } = require("./logout");
+const { getTasks } = require("./getTasks");
+const { postTask } = require("./postTask");
+const { deleteTask } = require("./deleteTask");
+const { patchTask } = require("./patchTask");
 
 module.exports = {
-  register,
-  login,
-  getCurrent,
-  logout,
+  getTasks,
+  postTask,
+  deleteTask,
+  patchTask,
 };

@@ -80,8 +80,22 @@ const taskValidator = Joi.object({
   category: Joi.string()
     .valid(...Object.values(CATEGORY))
     .required(),
+}).custom((doc, helpers) => {
+  if (doc.start > doc.end) {
+    throw new Error("Start time should be lower than End time!");
+  }
+  return doc; // Return the value unchanged
 });
 
-const schemas = { taskValidator };
+const taskUpdateValidator = Joi.object({
+  title: Joi.string().min(3).max(250),
+  date: Joi.string().pattern(dateRegexp),
+  start: Joi.string().pattern(timeRegexp),
+  end: Joi.string().pattern(timeRegexp),
+  priority: Joi.string().valid(...Object.values(PRIORITY)),
+  category: Joi.string().valid(...Object.values(CATEGORY)),
+});
+
+const schemas = { taskValidator, taskUpdateValidator };
 
 module.exports = { schemas, Task };
