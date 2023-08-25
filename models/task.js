@@ -21,8 +21,8 @@ const taskSchema = new Schema(
   {
     title: {
       type: String,
-      min: 3,
-      max: 250,
+      minlength: 3,
+      maxlength: 250,
       required: [true, "Set a title of task"],
     },
     date: {

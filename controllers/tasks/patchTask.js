@@ -11,7 +11,8 @@ const patchTask = async (req, res) => {
   if (!result) {
     throw HttpError(404, "Not found task");
   }
-  res.json(result);
+  const { _id, title, date, start, end, priority, category, owner } = result;
+  res.json({ _id, title, date, start, end, priority, category, owner });
 };
 
 module.exports = {
