@@ -712,7 +712,7 @@
             "example": "Very cool app, everything is clear and functional."
           },
           "rating": {
-            "type": "integer",
+            "type": "string",
             "description": "Review's rating",
             "example": "4",
             "enum": ["1", "2", "3", "4", "5"]
@@ -728,7 +728,7 @@
             "example": "Very cool app, everything is clear and functional."
           },
           "rating": {
-            "type": "integer",
+            "type": "string",
             "description": "Review's rating",
             "example": "4",
             "enum": ["1", "2", "3", "4", "5"]
