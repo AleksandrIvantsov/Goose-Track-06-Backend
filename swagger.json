@@ -177,6 +177,48 @@
         }
       }
     },
+    "/api/tasks?choosedMonth=2023-08": {
+      "get": {
+        "tags": ["Tasks"],
+        "summary": "Get tasks by month",
+        "parameters": [
+          {
+            "name": "choosedMonth",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TaskSerializer"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/tasks": {
       "post": {
         "tags": ["Tasks"],
