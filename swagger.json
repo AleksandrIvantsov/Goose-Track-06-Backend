@@ -20,6 +20,10 @@
     {
       "name": "Tasks",
       "description": "Todos endpoints"
+    },
+    {
+      "name": "Reviews",
+      "description": "Reviews endpoints"
     }
   ],
   "paths": {
@@ -65,7 +69,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/errorConflictResponse"
+                  "$ref": "#/components/schemas/errorUserConflictResponse"
                 }
               }
             }
@@ -380,6 +384,208 @@
           }
         }
       }
+    },
+    "/api/reviews": {
+      "get": {
+        "tags": ["Reviews"],
+        "summary": "Get all reviews",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReviewSerializer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reviews/own": {
+      "get": {
+        "tags": ["Reviews"],
+        "summary": "Get own review",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnReviewSerializer"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Reviews"],
+        "summary": "Create own review",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Review's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewCreationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnReviewSerializer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Review already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorReviewConflictResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Reviews"],
+        "summary": "Update own review",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Review's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewUpdatingRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnReviewSerializer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Review not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Reviews"],
+        "summary": "Delete own review",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "204": {
+            "description": "Review deleted successfully",
+            "content": {}
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Review not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -496,6 +702,39 @@
           }
         }
       },
+      "ReviewCreationRequest": {
+        "type": "object",
+        "required": ["comment", "rating"],
+        "properties": {
+          "comment": {
+            "type": "string",
+            "description": "Review's text",
+            "example": "Very cool app, everything is clear and functional."
+          },
+          "rating": {
+            "type": "integer",
+            "description": "Review's rating",
+            "example": "4",
+            "enum": ["1", "2", "3", "4", "5"]
+          }
+        }
+      },
+      "ReviewUpdatingRequest": {
+        "type": "object",
+        "properties": {
+          "comment": {
+            "type": "string",
+            "description": "Review's text",
+            "example": "Very cool app, everything is clear and functional."
+          },
+          "rating": {
+            "type": "integer",
+            "description": "Review's rating",
+            "example": "4",
+            "enum": ["1", "2", "3", "4", "5"]
+          }
+        }
+      },
       "UserSerializer": {
         "type": "object",
         "properties": {
@@ -586,8 +825,68 @@
           },
           "owner": {
             "type": "string",
-            "description": "Task's owner",
+            "description": "Task's owner id",
             "example": "64e88095ca6abac87e9fa9af"
+          }
+        }
+      },
+      "ReviewSerializer": {
+        "type": "object",
+        "properties": {
+          "comment": {
+            "type": "string",
+            "description": "Review's text",
+            "example": "Very cool app, everything is clear and functional."
+          },
+          "rating": {
+            "type": "integer",
+            "description": "Review's rating",
+            "example": "4",
+            "enum": ["1", "2", "3", "4", "5"]
+          },
+          "owner": {
+            "$ref": "#/components/schemas/OwnerSerializer"
+          }
+        }
+      },
+      "OwnReviewSerializer": {
+        "type": "object",
+        "properties": {
+          "comment": {
+            "type": "string",
+            "description": "Review's text",
+            "example": "Very cool app, everything is clear and functional."
+          },
+          "rating": {
+            "type": "integer",
+            "description": "Review's rating",
+            "example": "4",
+            "enum": ["1", "2", "3", "4", "5"]
+          },
+          "owner": {
+            "type": "string",
+            "description": "Review's owner id",
+            "example": "64e88095ca6abac87e9fa9af"
+          }
+        }
+      },
+      "OwnerSerializer": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "User's id",
+            "example": "64e8eaa7fef0e529ac75335c"
+          },
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Alex"
+          },
+          "avatarURL": {
+            "type": "string",
+            "description": "User's avatar",
+            "example": "https://www.example.com/images/823867328469.jpg"
           }
         }
       },
@@ -601,13 +900,23 @@
           }
         }
       },
-      "errorConflictResponse": {
+      "errorUserConflictResponse": {
         "type": "object",
         "properties": {
           "message": {
             "type": "string",
             "description": "Error message",
             "example": "Email in use"
+          }
+        }
+      },
+      "errorReviewConflictResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "This user sent own review earlier"
           }
         }
       },
