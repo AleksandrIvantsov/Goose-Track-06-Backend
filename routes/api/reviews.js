@@ -19,8 +19,8 @@ router.get("/own", authenticate, getOwnReview);
 
 router.post(
   "/own",
-  validateBody(schemas.reviewValidator),
   authenticate,
+  validateBody(schemas.reviewValidator),
   postReview
 );
 
@@ -28,8 +28,8 @@ router.delete("/own", authenticate, deleteReview);
 
 router.patch(
   "/own",
-  validateBody(schemas.reviewUpdateValidator, "mistakes in fields"),
   authenticate,
+  validateBody(schemas.reviewUpdateValidator, "mistakes in fields"),
   patchReview
 );
 

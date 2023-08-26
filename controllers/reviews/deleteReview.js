@@ -9,7 +9,7 @@ const deleteReview = async (req, res) => {
   if (!result) {
     throw HttpError(404, "Review not found");
   }
-  res.json({ message: "Review deleted" });
+  res.status(204).json({ message: "Review deleted" });
 };
 
 module.exports = {
