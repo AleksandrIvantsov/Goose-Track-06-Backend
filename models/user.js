@@ -67,9 +67,18 @@ const loginSchema = Joi.object({
   password: Joi.string().min(6).required(),
 });
 
+const updateSchema = Joi.object({
+  name: Joi.string().min(2).max(16),
+  email: Joi.string().pattern(emailRegexp),
+  birthday: Joi.string().pattern(birthdayRegexp),
+  phone: Joi.string().pattern(phoneRegexp),
+  skype: Joi.string().min(2).max(16),
+});
+
 const schemas = {
   registerSchema,
   loginSchema,
+  updateSchema,
 };
 
 const User = model("user", userSchema);
