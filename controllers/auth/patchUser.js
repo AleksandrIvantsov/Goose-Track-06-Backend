@@ -1,12 +1,20 @@
-const { ctrlWrapper } = require("../../utils");
+const { HttpError, ctrlWrapper } = require("../../utils");
 const { User } = require("../../models/user");
 
 const patchUser = async (req, res) => {
   const { _id } = req.user;
-  req.body = {
-    ...req.body,
-    avatarURL: req.file.path,
-  };
+  const user = await User.findOne({ email: req.body.email });
+
+  if (user) {
+    throw HttpError(409, "Email in use");
+  }
+
+  if (req.file?.path) {
+    req.body = {
+      ...req.body,
+      avatarURL: req.file.path,
+    };
+  }
 
   const result = await User.findByIdAndUpdate(_id, req.body, {
     new: true,
