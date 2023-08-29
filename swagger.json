@@ -127,6 +127,67 @@
         }
       }
     },
+    "/api/users/edit": {
+      "patch": {
+        "tags": ["Users"],
+        "summary": "Update user information",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "User's object",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdatingRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSerializer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Provided email already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUserConflictResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/users/current": {
       "get": {
         "tags": ["Users"],
@@ -627,6 +688,41 @@
           }
         }
       },
+      "UserUpdatingRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Alex"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "birthday": {
+            "type": "string",
+            "description": "User's birthday",
+            "example": "1995-08-25"
+          },
+          "phone": {
+            "type": "string",
+            "description": "User's phone",
+            "example": "+380972563477"
+          },
+          "skype": {
+            "type": "string",
+            "description": "User's skype",
+            "example": "alex_69"
+          },
+          "avatar": {
+            "type": "string",
+            "description": "User's avatar image",
+            "format": "binary"
+          }
+        }
+      },
       "TaskCreationRequest": {
         "type": "object",
         "required": ["title", "date", "start", "end", "priority", "category"],
@@ -766,7 +862,7 @@
           "avatarURL": {
             "type": "string",
             "description": "User's avatar",
-            "example": "https://www.example.com/images/823867328469.jpg"
+            "example": "https://res.cloudinary.com/dd6mxhckq/image/upload/v1693250339/avatars/64e88095ca6abac87e9fa9af.png"
           }
         }
       },
@@ -886,7 +982,7 @@
           "avatarURL": {
             "type": "string",
             "description": "User's avatar",
-            "example": "https://www.example.com/images/823867328469.jpg"
+            "example": "https://res.cloudinary.com/dd6mxhckq/image/upload/v1693250339/avatars/64e88095ca6abac87e9fa9af.png"
           }
         }
       },
