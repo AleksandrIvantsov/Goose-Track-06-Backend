@@ -11,7 +11,7 @@
   },
   "consumes": ["application/json", "multipart/form-data"],
   "produces": ["application/json"],
-  "servers": [{ "url": "https://goose-track-06-backend.onrender.com/" }],
+  "servers": [{ "url": "https://goose-track-06-backend.onrender.com/api/" }],
   "tags": [
     {
       "name": "Users",
@@ -27,7 +27,7 @@
     }
   ],
   "paths": {
-    "/api/users/register": {
+    "/users/register": {
       "post": {
         "tags": ["Users"],
         "summary": "User registration",
@@ -77,7 +77,7 @@
         }
       }
     },
-    "/api/users/login": {
+    "/users/login": {
       "post": {
         "tags": ["Users"],
         "summary": "User authorization",
@@ -127,7 +127,7 @@
         }
       }
     },
-    "/api/users/edit": {
+    "/users/edit": {
       "patch": {
         "tags": ["Users"],
         "summary": "Update user information",
@@ -188,7 +188,7 @@
         }
       }
     },
-    "/api/users/current": {
+    "/users/current": {
       "get": {
         "tags": ["Users"],
         "summary": "Current user information",
@@ -218,7 +218,7 @@
         }
       }
     },
-    "/api/users/logout": {
+    "/users/logout": {
       "post": {
         "tags": ["Users"],
         "summary": "User logout",
@@ -242,13 +242,14 @@
         }
       }
     },
-    "/api/tasks?choosedMonth=2023-08": {
+    "/tasks?choosedMonth={XXXX-XX}": {
       "get": {
         "tags": ["Tasks"],
         "summary": "Get tasks by month",
         "parameters": [
           {
             "name": "choosedMonth",
+            "description": "Month in format: 2023-08",
             "required": true,
             "in": "query",
             "schema": {
@@ -284,7 +285,7 @@
         }
       }
     },
-    "/api/tasks": {
+    "/tasks": {
       "post": {
         "tags": ["Tasks"],
         "summary": "Create new task",
@@ -335,13 +336,14 @@
         }
       }
     },
-    "/api/tasks/{id}": {
+    "/tasks/{id}": {
       "patch": {
         "tags": ["Tasks"],
         "summary": "Update task",
         "parameters": [
           {
             "name": "id",
+            "description": "Task id in format: 64e90804a67180aafb894854",
             "required": true,
             "in": "path",
             "schema": {
@@ -410,6 +412,7 @@
         "parameters": [
           {
             "name": "id",
+            "description": "Task id in format: 64e90804a67180aafb894854",
             "required": true,
             "in": "path",
             "schema": {
@@ -446,7 +449,7 @@
         }
       }
     },
-    "/api/reviews": {
+    "/reviews": {
       "get": {
         "tags": ["Reviews"],
         "summary": "Get all reviews",
@@ -468,7 +471,7 @@
         }
       }
     },
-    "/api/reviews/own": {
+    "/reviews/own": {
       "get": {
         "tags": ["Reviews"],
         "summary": "Get own review",

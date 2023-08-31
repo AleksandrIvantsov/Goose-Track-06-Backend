@@ -4,8 +4,9 @@ const { HttpError } = require("../../utils");
 
 const patchTask = async (req, res) => {
   const { id } = req.params;
+  const { _id: ownerId } = req.user;
 
-  const result = await Task.findByIdAndUpdate(id, req.body, {
+  const result = await Task.findOneAndUpdate({ id, owner: ownerId }, req.body, {
     new: true,
   });
   if (!result) {
