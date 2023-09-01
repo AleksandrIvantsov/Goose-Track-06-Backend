@@ -6,9 +6,13 @@ const patchTask = async (req, res) => {
   const { id } = req.params;
   const { _id: ownerId } = req.user;
 
-  const result = await Task.findOneAndUpdate({ id, owner: ownerId }, req.body, {
-    new: true,
-  });
+  const result = await Task.findOneAndUpdate(
+    { _id: id, owner: ownerId },
+    req.body,
+    {
+      new: true,
+    }
+  );
   if (!result) {
     throw HttpError(404, "Not found task");
   }

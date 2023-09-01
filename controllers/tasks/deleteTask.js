@@ -4,9 +4,9 @@ const { HttpError } = require("../../utils");
 
 const deleteTask = async (req, res) => {
   const { id } = req.params;
-  const { _id: owner } = req.user;
+  const { _id: ownerId } = req.user;
 
-  const result = await Task.findOneAndRemove({ id, owner });
+  const result = await Task.findOneAndRemove({ _id: id, owner: ownerId });
   if (!result) {
     throw HttpError(404, "Task not found");
   }
