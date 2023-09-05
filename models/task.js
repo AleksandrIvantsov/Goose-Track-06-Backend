@@ -14,7 +14,7 @@ const CATEGORY = {
 };
 
 const dateRegexp = /\d{4}-\d{2}-\d{2}/; // формат дати YYYY-MM-DD
-const timeRegexp = /\d{2}:\d{2}/; // формат часу HH-MM
+const timeRegexp = /\d{2}:\d{2}/; // формат часу HH:MM
 
 // Валідатор даних на сервері
 const taskSchema = new Schema(
@@ -38,7 +38,13 @@ const taskSchema = new Schema(
     end: {
       type: String,
       match: timeRegexp,
-      required: [true, "Set time start of task"],
+      required: [true, "Set time end of task"],
+      validate: {
+        validator: function (value) {
+          return value > this.start;
+        },
+        message: "Start time should be lower than End time!",
+      },
     },
     priority: {
       type: String,
@@ -70,16 +76,49 @@ const Task = model("task", taskSchema);
 
 // Валідатори отриманих з клієнта даних
 const taskValidator = Joi.object({
-  title: Joi.string().min(3).max(250).required(),
-  date: Joi.string().pattern(dateRegexp).required(),
-  start: Joi.string().pattern(timeRegexp).required(),
-  end: Joi.string().pattern(timeRegexp).required(),
+  title: Joi.string().min(3).max(250).required().empty(false).messages({
+    "string.base": "Title must be a string.",
+    "any.required": "Title field is required.",
+    "string.empty": "Title must not be empty.",
+    "string.min": "Title must be not less than 3 characters.",
+    "string.max": "Title must be not longer than 250 characters.",
+  }),
+  date: Joi.string().pattern(dateRegexp).required().empty(false).messages({
+    "string.base": "Date must be a string.",
+    "any.required": "Date field is required.",
+    "string.empty": "Date must not be empty.",
+    "string.pattern.base": "Date must be in propper format, ex: 2023-08-25.",
+  }),
+  start: Joi.string().pattern(timeRegexp).required().empty(false).messages({
+    "string.base": "Start time must be a string.",
+    "any.required": "Start time field is required.",
+    "string.empty": "Start time must not be empty.",
+    "string.pattern.base": "Start time must be in propper format, ex: 09:00.",
+  }),
+  end: Joi.string().pattern(timeRegexp).required().empty(false).messages({
+    "string.base": "End time must be a string.",
+    "any.required": "End time field is required.",
+    "string.empty": "End time must not be empty.",
+    "string.pattern.base": "End time must be in propper format, ex: 18:00.",
+  }),
   priority: Joi.string()
     .valid(...Object.values(PRIORITY))
-    .required(),
+    .required()
+    .empty(false)
+    .messages({
+      "string.base": "Priority must be a string.",
+      "any.required": "Priority field is required.",
+      "string.empty": "Priority must not be empty.",
+    }),
   category: Joi.string()
     .valid(...Object.values(CATEGORY))
-    .required(),
+    .required()
+    .empty(false)
+    .messages({
+      "string.base": "Category must be a string.",
+      "any.required": "Category field is required.",
+      "string.empty": "Category must not be empty.",
+    }),
 }).custom((doc, helpers) => {
   if (doc.start > doc.end) {
     throw new Error("Start time should be lower than End time!");
@@ -88,12 +127,41 @@ const taskValidator = Joi.object({
 });
 
 const taskUpdateValidator = Joi.object({
-  title: Joi.string().min(3).max(250),
-  date: Joi.string().pattern(dateRegexp),
-  start: Joi.string().pattern(timeRegexp),
-  end: Joi.string().pattern(timeRegexp),
-  priority: Joi.string().valid(...Object.values(PRIORITY)),
-  category: Joi.string().valid(...Object.values(CATEGORY)),
+  title: Joi.string().min(3).max(250).empty(false).messages({
+    "string.base": "Title must be a string.",
+    "string.empty": "Title must not be empty.",
+    "string.min": "Title must be not less than 3 characters.",
+    "string.max": "Title must be not longer than 250 characters.",
+  }),
+  date: Joi.string().pattern(dateRegexp).empty(false).messages({
+    "string.base": "Date must be a string.",
+    "string.empty": "Date must not be empty.",
+    "string.pattern.base": "Date must be in propper format, ex: 2023-08-25.",
+  }),
+  start: Joi.string().pattern(timeRegexp).empty(false).messages({
+    "string.base": "Start time must be a string.",
+    "string.empty": "Start time must not be empty.",
+    "string.pattern.base": "Start time must be in propper format, ex: 09:00.",
+  }),
+  end: Joi.string().pattern(timeRegexp).empty(false).messages({
+    "string.base": "End time must be a string.",
+    "string.empty": "End time must not be empty.",
+    "string.pattern.base": "End time must be in propper format, ex: 18:00.",
+  }),
+  priority: Joi.string()
+    .valid(...Object.values(PRIORITY))
+    .empty(false)
+    .messages({
+      "string.base": "Priority must be a string.",
+      "string.empty": "Priority must not be empty.",
+    }),
+  category: Joi.string()
+    .valid(...Object.values(CATEGORY))
+    .empty(false)
+    .messages({
+      "string.base": "Category must be a string.",
+      "string.empty": "Category must not be empty.",
+    }),
 });
 
 const schemas = { taskValidator, taskUpdateValidator };

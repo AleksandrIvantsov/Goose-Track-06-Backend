@@ -38,15 +38,38 @@ const Review = model("review", reviewSchema);
 
 // Валідатори отриманих з клієнта даних
 const reviewValidator = Joi.object({
-  comment: Joi.string().min(3).max(300).required(),
+  comment: Joi.string().min(3).max(300).required().empty(false).messages({
+    "string.base": "Review must be a string.",
+    "any.required": "Review field is required.",
+    "string.empty": "Review must not be empty.",
+    "string.min": "Review must be not less than 3 characters.",
+    "string.max": "Review must be not longer than 300 characters.",
+  }),
   rating: Joi.string()
     .valid(...ratings)
-    .required(),
+    .required()
+    .empty(false)
+    .messages({
+      "string.base": "Rating must be a string.",
+      "any.required": "Rating field is required.",
+      "string.empty": "Rating must not be empty.",
+    }),
 });
 
 const reviewUpdateValidator = Joi.object({
-  comment: Joi.string().min(3).max(300),
-  rating: Joi.string().valid(...ratings),
+  comment: Joi.string().min(3).max(300).empty(false).messages({
+    "string.base": "Review must be a string.",
+    "string.empty": "Review must not be empty.",
+    "string.min": "Review must be not less than 3 characters.",
+    "string.max": "Review must be not longer than 300 characters.",
+  }),
+  rating: Joi.string()
+    .valid(...ratings)
+    .empty(false)
+    .messages({
+      "string.base": "Rating must be a string.",
+      "string.empty": "Rating must not be empty.",
+    }),
 });
 
 const schemas = { reviewValidator, reviewUpdateValidator };
